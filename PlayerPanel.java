@@ -11,10 +11,11 @@ import java.awt.event.ActionListener;
 
 public class PlayerPanel extends JPanel implements ActionListener {
     public int playerNumber;
-    private JButton btnPass;
+    public JButton btnPass;
     private JLabel lblPlayerNumber;
     private int tilesPlayed = 0;
     private int playableTiles = -1;
+    public int totalPoints;
     public PlayerPanel(int x, int y, Color color, int playerNumber){
         this.playerNumber = playerNumber;
         this.setLayout(null);
@@ -42,6 +43,7 @@ public class PlayerPanel extends JPanel implements ActionListener {
             tiles[i].setBounds(125, i*30, 60, 30);
             tiles[i].addActionListener(this);
             add(tiles[i]);
+            totalPoints += tiles[i].getValue();
         }
         revalidate();
         repaint();
@@ -67,6 +69,7 @@ public class PlayerPanel extends JPanel implements ActionListener {
         JButton btn = (JButton) e.getSource();
         if(btn == btnPass){
             GameLogic.increasePlayerTurn();
+            GameLogic.skipsCount++;
             return;
         }
         if(btn instanceof Tile){
@@ -76,6 +79,7 @@ public class PlayerPanel extends JPanel implements ActionListener {
             }
             Tile tile = (Tile) btn;
             GameLogic.play(tile);
+            GameLogic.skipsCount = 0;
         }
     }
 
@@ -85,11 +89,9 @@ public class PlayerPanel extends JPanel implements ActionListener {
     public int getTilesPlayed(){
         return tilesPlayed;
     }
-
     public int getPlayableTiles() {
         return playableTiles;
     }
-
     public void setPlayableTiles(int playableTiles) {
         this.playableTiles = playableTiles;
     }

@@ -95,9 +95,15 @@ public class App extends JFrame implements ActionListener {
         }
         if(aux == btnDeal){
             gamePanel.clearPanel();
+            gamePanel.setLayout(new BoxLayout(gamePanel, BoxLayout.X_AXIS));
             GameLogic.dealTiles();
             for(int i=0; i<4; i++){
                 playerPanels[i].addTiles();
+            }
+            btnShow.setEnabled(false);
+            btnShuffle.setEnabled(false);
+            for(int i=0; i<4; i++){
+                GameLogic.blockNonPlayableTiles(i);
             }
             return;
         }

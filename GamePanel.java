@@ -14,10 +14,10 @@ public class GamePanel extends JPanel {
     private void makeGamePanel(){
         this.setLayout(null);
         this.setLocation(100, 100);
-        this.setSize(1000,450);
+        this.setSize(1200,200);
 
         repaintTiles();
-        setBackground(Color.GREEN);
+        this.setBackground(new Color(128, 255, 128));
         setVisible(true);
     }
 
@@ -26,7 +26,7 @@ public class GamePanel extends JPanel {
         int tileNumber = 0;
         for(int i = 0; i < 4; i++){
             for(int j = 0; j < 7; j++){
-                GameLogic.tiles[tileNumber].setLocation((80 * j) + 20, (40 * i) + 150);
+                GameLogic.tiles[tileNumber].setLocation((80 * j) + 30, (40 * i) + 150);
                 this.add(GameLogic.tiles[tileNumber]);
                 tileNumber++;
             }

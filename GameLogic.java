@@ -15,8 +15,8 @@ public class GameLogic {
     private static Tile currentTile;
     private static int leftValue;
     private static int rightValue;
-    private static int leftCoordX = 330;
-    private static int rightCoordX = 330;
+    public static int skipsCount;
+    private static int winner;
     //Initizalize tiles
     private static Tile[] createTiles(){
         tiles = new Tile[28];
@@ -36,7 +36,7 @@ public class GameLogic {
         int random;
         for(int i = 0; i < tiles.length; i++){
             aux = tiles[i];
-            random = rnd.nextInt(27);
+            random = rnd.nextInt(28);
             tiles[i] = tiles[random];
             tiles[random] = aux;
         }
@@ -62,12 +62,22 @@ public class GameLogic {
         }
     }
 
-    //Disable tiles that can't be played
     public static void blockNonPlayableTiles(int playerNumber){
+        if(tilesPlayed == 0){
+            for(Tile tile : playerTiles[playerNumber]){
+                tile.setEnabled(false);
+                if(tile.getValue() == 12){
+                    tile.setEnabled(true);
+                }
+            }
+            return;
+        }
+
         int playableTiles = 0;
         for(Tile tile : playerTiles[playerNumber]){
-            tile.setEnabled(isPlayable(tile));
-            if(isPlayable(tile)){
+            boolean isPlayable = isPlayable(tile);
+            tile.setEnabled(isPlayable);
+            if(isPlayable){
                 playableTiles++;
             }
         }
@@ -86,39 +96,57 @@ public class GameLogic {
         App.setLblPlayerTurn("Player " + (currentPlayer + 1) + " turn");
     }
 
-    //TODO: Fix closed game
     private static boolean haveWon(){
-        return App.playerPanels[currentPlayer].getTilesPlayed() == 7 || (App.playerPanels[0].getPlayableTiles() == 0 && App.playerPanels[1].getPlayableTiles() == 0 && App.playerPanels[2].getPlayableTiles() == 0 && App.playerPanels[3].getPlayableTiles() == 0);
+        if(skipsCount == 4){
+            winner = getPlayerWithMorePoints();
+            return true;
+        }
+        if(App.playerPanels[currentPlayer].getTilesPlayed() == 7){
+            winner = currentPlayer;
+            return true;
+        }
+        return false;
+    }
+
+    private static int getPlayerWithMorePoints(){
+        int max = 0;
+        int winner = 0;
+        for(PlayerPanel p : App.playerPanels){
+            if(p.totalPoints > max){
+                max = p.totalPoints;
+                winner = p.playerNumber;
+            }
+        }
+        return winner;
     }
 
     private static void addLeftTile(Tile tile){
-        leftCoordX -= 60;
-        tile.setLocation(leftCoordX, 200);
-
         if(tile.getValRight() == leftValue){
             tile.setDisabledIcon(tile.getIcon());
             leftValue = tile.getValLeft();
         }else if(tile.getValLeft() == leftValue){
-            tile.setDisabledImg("C:\\Users\\jesus\\Desktop\\Tareas\\Topicos\\Domino\\resources\\" + tile.getValRight() + "-" + tile.getValLeft() + ".png");
+            if(tile.getValLeft() != tile.getValRight()){
+                tile.setDisabledImg("resources\\" + tile.getValRight() + "-" + tile.getValLeft() + ".png");
+                tile.setImg("resources\\" + tile.getValRight() + "-" + tile.getValLeft() + ".png");
+            }
             leftValue = tile.getValRight();
         }
 
         tile.setEnabled(false);
-        App.gamePanel.add(tile);
+        App.gamePanel.add(tile, 0);
     }
 
     private static void addRightTile(Tile tile){
-        tile.setLocation(rightCoordX, 200);
-
         if(tile.getValLeft() == rightValue){
             tile.setDisabledIcon(tile.getIcon());
             rightValue = tile.getValRight();
         }else if(tile.getValRight() == rightValue){
-            tile.setDisabledImg("C:\\Users\\jesus\\Desktop\\Tareas\\Topicos\\Domino\\resources\\" + tile.getValRight() + "-" + tile.getValLeft() + ".png");
+            if(tile.getValLeft() != tile.getValRight()) {
+                tile.setDisabledImg("resources\\" + tile.getValRight() + "-" + tile.getValLeft() + ".png");
+                tile.setImg("resources\\" + tile.getValRight() + "-" + tile.getValLeft() + ".png");
+            }
             rightValue = tile.getValLeft();
         }
-
-        rightCoordX += 60;
 
         tile.setEnabled(false);
         App.gamePanel.add(tile);
@@ -127,9 +155,12 @@ public class GameLogic {
     public static void play(Tile tile){
         currentTile = tile;
         App.playerPanels[currentPlayer].remove(tile);
+        App.playerPanels[currentPlayer].totalPoints -= tile.getValue();
 
         if(tilesPlayed == 0){
-            addLeftTile(currentTile);
+            tile.setEnabled(false);
+            tile.setDisabledIcon(tile.getIcon());
+            App.gamePanel.add(tile);
             leftValue = currentTile.getValLeft();
             rightValue = currentTile.getValRight();
         }else{
@@ -146,12 +177,13 @@ public class GameLogic {
         tilesPlayed++;
 
         if(haveWon()){
-            JOptionPane.showMessageDialog(null, "Player " + (currentPlayer + 1) + " won!");
+            JOptionPane.showMessageDialog(null, "Player " + (winner + 1) + " won!");
         }
 
         increasePlayerTurn();
-        blockNonPlayableTiles(currentPlayer);
-
+        for(int i = 0; i < 4; i++){
+            blockNonPlayableTiles(i);
+        }
     }
 
     public static int getCurrentPlayer(){

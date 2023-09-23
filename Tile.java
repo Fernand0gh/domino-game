@@ -10,8 +10,8 @@ import java.awt.*;
 public class Tile extends JButton {
     //This class is a Button with 2 JLabels, each is an Image
     private final String strImg;
-    private static final String blackImg = "C:\\Users\\jesus\\Desktop\\Tareas\\Topicos\\Domino\\resources\\black.png"; //Reverse image
-    private int IMG_SIZE = 30;
+    private static final String blackImg = "resources\\black.png"; //Reverse image
+    private static final int IMG_SIZE = 30;
     private final int valLeft;
     private final int valRight;
     private final int value;
@@ -20,12 +20,12 @@ public class Tile extends JButton {
     public Tile(int valLeft, int valRight){
         //The 0-0 image is not png
         if(valLeft == 0 && valRight == 0){
-            strImg = "C:\\Users\\jesus\\Desktop\\Tareas\\Topicos\\Domino\\resources\\0-0.jpg";
+            strImg = "resources\\0-0.jpg";
         }else {
-            strImg = "C:\\Users\\jesus\\Desktop\\Tareas\\Topicos\\Domino\\resources\\" + valLeft + "-" + valRight + ".png";
+            strImg = "resources\\" + valLeft + "-" + valRight + ".png";
         }
 
-        this.setImg(blackImg);
+        this.setIcon(new ImageIcon(blackImg));
 
         this.setSize(IMG_SIZE*2, IMG_SIZE);
 
@@ -37,7 +37,7 @@ public class Tile extends JButton {
 
     private ImageIcon resizeImage(String image){
         ImageIcon aux = new ImageIcon(image);
-        return new ImageIcon(aux.getImage().getScaledInstance(IMG_SIZE*2, IMG_SIZE, Image.SCALE_SMOOTH));
+        return new ImageIcon(aux.getImage().getScaledInstance(this.getWidth(), this.getHeight(), Image.SCALE_SMOOTH));
     }
 
     public void setImg(String strImg){

@@ -1,5 +1,8 @@
 # Domino Game
 Domino game implemented in Java with GUI
-![image](https://github.com/Fernand0gh/domino-game/assets/117942609/cf469a5f-4590-4a4e-84e4-2c8fe09ad976)
 
-![image](https://github.com/Fernand0gh/domino-game/assets/117942609/87267921-c5bf-4adf-b5a8-a7743de7534b)
+![image](https://github.com/Fernand0gh/domino-game/assets/117942609/f19127bf-14a9-45a9-9170-6f643acec057)
+
+![image](https://github.com/Fernand0gh/domino-game/assets/117942609/7c51a930-1d3e-4fd4-97b9-647a95198318)
+
+![image](https://github.com/Fernand0gh/domino-game/assets/117942609/14647fae-dd34-4221-8ec3-9b387ff430e8)
